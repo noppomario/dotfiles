@@ -18,4 +18,5 @@ chezmoi init https://github.com/noppomario/dotfiles.git
 
 ```bash
 chezmoi apply
+mise install
 ```
