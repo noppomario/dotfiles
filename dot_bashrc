@@ -66,7 +66,7 @@ source /usr/share/fzf/shell/key-bindings.bash
 # ----- エイリアス設定 -----
 
 # util
-alias bashrc='source ~/.bashrc'
+alias brc='source ~/.bashrc'
 
 # ls
 alias ls='ls --color=auto'
@@ -79,6 +79,14 @@ alias gs='git status'
 alias gc='git commit'
 alias gd='git diff'
 
+# cd
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# chezmoi
+# alias cheply='chezmoi apply'
+# alias brce='chezmoi edit ~/.bashrc'
 
 
 # VSCode
