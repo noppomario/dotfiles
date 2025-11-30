@@ -1,0 +1,7 @@
+[tools]
+chezmoi = "latest"
+node = "latest"
+"npm:@anthropic-ai/claude-code" = "latest"
+pnpm = "latest"
+python = "latest"
+uv = "latest"
