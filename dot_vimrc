@@ -1,0 +1,105 @@
+" ~/.vimrc
+
+" ----- 基本的な設定 -----
+syntax enable                   " シンタックスハイライトを有効化
+set number                      " 行番号を表示
+"set relativenumber              " 相対的な行番号表示
+"set cursorline                  " 現在の行を強調表示
+set expandtab                   " タブをスペースに変換
+set tabstop=4                   " タブの幅を4スペース分に設定
+set shiftwidth=4                " インデント幅を4に設定
+set autoindent                  " 自動インデントを有効化
+set smartindent                 " スマートインデント
+set ignorecase                  " 検索時に大文字小文字を無視
+set smartcase                   " 大文字混在時は区別して検索
+set hlsearch                    " 検索結果をハイライト表示
+set incsearch                   " 検索中にリアルタイムで結果表示
+set showmatch                   " 対応する括弧を表示
+set history=500                 " 履歴の記憶数を増やす
+set clipboard=unnamedplus       " OSのクリップボードと共有
+set backspace=indent,eol,start  " バックスペースを有効化
+"set mouse=a                     " マウス操作を有効化
+set encoding=utf-8              " ファイルのエンコーディングをUTF-8に設定
+set fileformats=unix,dos,mac    " 改行コードを自動判別
+
+" ----- 表示関連 -----
+set wrap                        " 長い行を折り返して表示
+set linebreak                   " 単語単位で折り返す
+set showcmd                     " 打ったコマンドを表示
+set wildmenu                    " コマンドモードでの補完を強化
+set ruler                       " カーソル位置を常に表示
+"set colorcolumn=80              " 80文字目に目安線を表示（コーディング規約などで推奨）
+
+" ----- エラー音を消す -----
+set noerrorbells                " エラー音を消す
+"set visualbell                  " 視覚的なベルに切り替える
+
+" ----- カラースキーム -----
+"colorscheme desert              " カラースキームを指定（desertなど標準テーマ）
+
+" ----- ファイルタイプの自動検出 -----
+filetype plugin indent on
+
+" ----- 空白文字を可視化（好みに応じて） -----
+set list
+set listchars=tab:»-,trail:·,extends:>,precedes:<
+
+" ----- 自動保存とバックアップを制御 -----
+set nobackup
+set noswapfile
+set nowritebackup
+
+" ----- 便利なショートカット設定 -----
+" jjをESCキーの代わりに（挿入モードから抜ける）
+inoremap jj <ESC>
+
+" Ctrl+sでファイルを保存
+nnoremap <C-s> :w<CR>
+inoremap <C-s> <ESC>:w<CR>a
+
+" ESCを2回押すとハイライト解除
+nnoremap <ESC><ESC> :nohlsearch<CR>
+
+" 分割ウィンドウ操作を簡単にするショートカット
+nnoremap <C-J> <C-W>j
+nnoremap <C-K> <C-W>k
+nnoremap <C-H> <C-W>h
+nnoremap <C-L> <C-W>l
+
+" Ctrl+pでファイルを検索する設定（ショートカット）
+nnoremap <C-p> :Files<CR>
+
+" :Buffers でバッファ検索
+nnoremap <C-b> :Buffers<CR>
+
+" ファイルブラウザ(Netrw)を横分割で開く
+let g:netrw_browse_split=4
+let g:netrw_banner=0
+
+" ----- プラグインの設定（オプション） -----
+" プラグイン管理にはvim-plugを推奨します
+call plug#begin('~/.vim/plugged')
+
+" NerdTree（ファイルツリー表示）
+Plug 'preservim/nerdtree'
+
+" vim-airline（ステータスバーの強化）
+Plug 'vim-airline/vim-airline'
+
+" fzf.vim（ファイル検索強化）
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+
+" codedark（テーマ設定）
+Plug 'tomasiser/vim-code-dark'
+
+call plug#end()
+
+" NERDTreeをトグルするキー割り当て(ctrl+N)
+nnoremap <silent><C-n> :NERDTreeToggle<CR>
+
+" カラースキームを指定
+colorscheme codedark
+"set background=dark
+"highlight Normal ctermbg=NONE guibg=NONE
+

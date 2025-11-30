@@ -1,0 +1,96 @@
+# .bashrc
+
+# Source global sefinitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+if [ -d ~/.bashrc.d ]; then
+    for rc in ~/.bashrc.d/*; do
+        if [ -f "$rc" ]; then
+            . "$rc"
+        fi
+    done
+fi
+unset rc
+eval "$(mise activate bash)"
+
+# ----- 基本設定 -----
+
+# デフォルトエディタ設定
+export EDITOR=vim
+export VISUAL=vim
+
+# 大文字・小文字を無視した補完（インタラクティブシェルでのみ実行）
+if [[ $- == *i* ]]; then
+    bind 'set completion-ignore-case on' 2>/dev/null
+fi
+
+# 重複した履歴を削除してスッキリ管理
+HISTCONTROL=ignoredups:erasedups
+HISTSIZE=10000
+HISTFILESIZE=20000
+
+# 履歴にタイムスタンプを記録する
+export HISTTIMEFORMAT='%Y-%m-%d %H:%M:%S '
+
+# コマンド履歴を即座にファイルに書き込む
+shopt -s histappend
+PROMPT_COMMAND='history -a'
+
+# 誤ってCtrl-Dを押した際に即座に終了しないようにする
+export IGNOREEOF=3
+
+# lessを見やすく
+export LESS='-RFiX'
+
+# grepをカラー表示に
+export GREP_OPTIONS='--color=auto'
+
+# npmのグローバルインストール先を変更
+# export PATH="$HOME/.npm-global/bin:$PATH"
+
+# fzfのキーバインド有効化
+source /usr/share/fzf/shell/key-bindings.bash
+
+# ----- エイリアス設定 -----
+
+# util
+alias bashrc='source ~/.bashrc'
+
+# ls
+alias ls='ls --color=auto'
+alias ll='ls -lh'
+alias la='ls -A'
+alias lla='ls -Alh'
+
+# git
+alias gs='git status'
+alias gc='git commit'
+alias gd='git diff'
+
+
+
+# VSCode
+function codeinsiders() {
+    /usr/bin/code-insiders "$@"
+}
+alias code='codeinsiders'
+
+# cdしたら即座にlsを実行
+function cdls() {
+    builtin cd "$@" && ls
+}
+alias cd='cdls'
+
+
