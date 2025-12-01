@@ -1,6 +1,10 @@
 # dotfiles
 
+Personal dotfiles for Fedora Linux
+
 ## Quick Setup (Recommended)
+
+**Requirements:** Fedora Linux
 
 Run the automated setup script:
 
@@ -17,60 +21,59 @@ cd dotfiles
 ```
 
 The setup script will:
-1. Install mise-en-place (tool version manager)
-2. Install chezmoi (dotfile manager)
-3. Clone this dotfiles repository
-4. Apply dotfiles to your system
-5. Install all required tools (node, pnpm, python, uv, claude-code, etc.)
-
-### Supported Operating Systems
-
-- Fedora/RHEL/CentOS
-- Ubuntu/Debian
-- Arch Linux/Manjaro
-- macOS (requires Homebrew)
+1. Check if running on Fedora (will exit if not)
+2. Install required system packages (git, vim, curl, fzf)
+3. Install mise-en-place (tool version manager)
+4. Install chezmoi (dotfile manager) via mise
+5. Install vim-plug (vim plugin manager)
+6. Clone this dotfiles repository
+7. Apply dotfiles to your system (with confirmation)
+8. Install vim plugins (NERDTree, vim-airline, fzf.vim, vim-code-dark)
+9. Install development tools via mise (node, pnpm, python, uv, claude-code)
 
 ## Manual Setup
 
-If you prefer to set up manually:
+If you prefer to set up manually on Fedora:
 
-### 1. Install mise-en-place
+### 1. Install system packages
 
-**Fedora/RHEL:**
+```bash
+sudo dnf install -y git vim curl fzf dnf-plugins-core
+```
+
+### 2. Install mise-en-place
+
 ```bash
 sudo dnf copr enable jdxcode/mise
 sudo dnf install mise
 echo 'eval "$(mise activate bash)"' >> ~/.bashrc
+source ~/.bashrc
 ```
 
-**Ubuntu/Debian:**
+### 3. Install vim-plug
+
 ```bash
-sudo apt-get update
-sudo apt-get install -y gpg wget curl
-sudo install -dm 755 /etc/apt/keyrings
-wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | sudo tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null
-echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
-sudo apt-get update
-sudo apt-get install -y mise
-echo 'eval "$(mise activate bash)"' >> ~/.bashrc
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ```
 
-**macOS:**
-```bash
-brew install mise
-echo 'eval "$(mise activate bash)"' >> ~/.bashrc
-```
-
-### 2. Clone dotfiles
+### 4. Initialize and apply dotfiles
 
 ```bash
+mise use -g chezmoi@latest
 chezmoi init https://github.com/noppomario/dotfiles.git
+chezmoi apply
 ```
 
-### 3. Apply dotfiles
+### 5. Install vim plugins
 
 ```bash
-chezmoi apply
+vim +PlugInstall +qall
+```
+
+### 6. Install development tools
+
+```bash
 mise install
 ```
 
@@ -78,6 +81,19 @@ mise install
 
 After setup, the following tools will be available:
 
+### System Tools
+- **git** - Version control
+- **vim** - Text editor with plugins
+- **curl** - HTTP client
+- **fzf** - Fuzzy finder for files and commands
+
+### Vim Plugins (via vim-plug)
+- **NERDTree** - File tree explorer
+- **vim-airline** - Status bar
+- **fzf.vim** - Fuzzy file search
+- **vim-code-dark** - VS Code dark theme
+
+### Development Tools (via mise)
 - **chezmoi** - Dotfile manager
 - **node** - JavaScript runtime (latest)
 - **pnpm** - Fast, disk space efficient package manager

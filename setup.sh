@@ -26,23 +26,37 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Detect OS
-detect_os() {
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        if [ -f /etc/os-release ]; then
-            . /etc/os-release
-            OS=$ID
-        else
-            log_error "Cannot detect Linux distribution"
+# Check if running on Fedora
+check_fedora() {
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        if [[ "$ID" != "fedora" ]]; then
+            log_error "This script is designed for Fedora only. Detected OS: $ID"
             exit 1
         fi
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-        OS="macos"
+        log_info "Detected Fedora $VERSION_ID"
     else
-        log_error "Unsupported OS: $OSTYPE"
+        log_error "Cannot detect OS. /etc/os-release not found."
         exit 1
     fi
-    log_info "Detected OS: $OS"
+}
+
+# Install required system packages
+install_system_packages() {
+    log_info "Installing required system packages..."
+
+    local packages=(
+        git
+        vim
+        curl
+        fzf
+        'dnf-command(copr)'
+    )
+
+    log_info "Installing: ${packages[*]}"
+    sudo dnf install -y "${packages[@]}"
+
+    log_success "System packages installed successfully"
 }
 
 # Install mise-en-place
@@ -53,48 +67,8 @@ install_mise() {
     fi
 
     log_info "Installing mise-en-place..."
-
-    case "$OS" in
-        fedora|rhel|centos)
-            log_info "Installing mise via dnf (COPR repository)..."
-            sudo dnf install -y 'dnf-command(copr)'
-            sudo dnf copr enable -y jdxcode/mise
-            sudo dnf install -y mise
-            ;;
-        ubuntu|debian)
-            log_info "Installing mise via apt..."
-            sudo apt-get update
-            sudo apt-get install -y gpg wget curl
-            sudo install -dm 755 /etc/apt/keyrings
-            wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | sudo tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null
-            echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
-            sudo apt-get update
-            sudo apt-get install -y mise
-            ;;
-        arch|manjaro)
-            log_info "Installing mise via pacman (AUR)..."
-            if command -v yay &> /dev/null; then
-                yay -S --noconfirm mise-bin
-            elif command -v paru &> /dev/null; then
-                paru -S --noconfirm mise-bin
-            else
-                log_error "Please install yay or paru to install mise from AUR"
-                exit 1
-            fi
-            ;;
-        macos)
-            log_info "Installing mise via Homebrew..."
-            if ! command -v brew &> /dev/null; then
-                log_error "Homebrew is not installed. Please install it first: https://brew.sh"
-                exit 1
-            fi
-            brew install mise
-            ;;
-        *)
-            log_warning "Unsupported OS for automatic mise installation. Attempting curl install..."
-            curl https://mise.run | sh
-            ;;
-    esac
+    sudo dnf copr enable -y jdxcode/mise
+    sudo dnf install -y mise
 
     log_success "mise installed successfully"
 }
@@ -152,6 +126,46 @@ install_chezmoi() {
     fi
 
     log_success "chezmoi installed successfully"
+}
+
+# Install vim-plug
+install_vim_plug() {
+    local vim_plug_path="$HOME/.vim/autoload/plug.vim"
+
+    if [ -f "$vim_plug_path" ]; then
+        log_success "vim-plug is already installed"
+        return 0
+    fi
+
+    log_info "Installing vim-plug..."
+    curl -fLo "$vim_plug_path" --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+    log_success "vim-plug installed successfully"
+}
+
+# Install vim plugins
+install_vim_plugins() {
+    log_info "Installing vim plugins..."
+
+    # Skip if vimrc doesn't exist or doesn't use vim-plug
+    if [ ! -f "$HOME/.vimrc" ]; then
+        log_warning "~/.vimrc not found. Skipping vim plugin installation."
+        return 0
+    fi
+
+    if ! grep -q "plug#begin" "$HOME/.vimrc" 2>/dev/null; then
+        log_warning "vim-plug not configured in ~/.vimrc. Skipping plugin installation."
+        return 0
+    fi
+
+    log_info "Running vim +PlugInstall..."
+    vim +PlugInstall +qall || {
+        log_warning "vim plugin installation encountered issues. Please run ':PlugInstall' manually in vim."
+        return 0
+    }
+
+    log_success "Vim plugins installed successfully"
 }
 
 # Initialize dotfiles with chezmoi
@@ -219,10 +233,13 @@ show_installed_tools() {
 
 # Main setup function
 main() {
-    log_info "Starting dotfiles setup..."
+    log_info "Starting dotfiles setup for Fedora..."
     echo
 
-    detect_os
+    check_fedora
+    echo
+
+    install_system_packages
     echo
 
     install_mise
@@ -234,10 +251,16 @@ main() {
     install_chezmoi
     echo
 
+    install_vim_plug
+    echo
+
     init_dotfiles
     echo
 
     apply_dotfiles
+    echo
+
+    install_vim_plugins
     echo
 
     install_tools
@@ -254,6 +277,8 @@ main() {
     log_info "  - python, uv (for Python development)"
     log_info "  - claude-code (Anthropic's Claude CLI)"
     log_info "  - chezmoi (for managing dotfiles)"
+    log_info "  - fzf (for fuzzy file finding)"
+    log_info "  - vim with plugins (NERDTree, vim-airline, fzf.vim, vim-code-dark)"
 }
 
 # Run main function
