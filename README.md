@@ -26,69 +26,6 @@ cd dotfiles
 ./setup.sh
 ```
 
-The setup script will:
-1. Check if running on Fedora (will exit if not)
-2. Install additional system packages (vim, fzf, dnf-plugins-core)
-3. Install mise-en-place (tool version manager)
-4. Install chezmoi (dotfile manager) via mise
-5. Install vim-plug (vim plugin manager)
-6. Clone this dotfiles repository
-7. Apply dotfiles to your system (with confirmation)
-8. Install vim plugins (NERDTree, vim-airline, fzf.vim, vim-code-dark)
-9. Install development tools via mise (node, pnpm, python, uv, claude-code)
-
-## Manual Setup
-
-If you prefer to set up manually on Fedora:
-
-### 1. Install basic requirements
-
-```bash
-sudo dnf install -y git curl
-```
-
-### 2. Install additional system packages
-
-```bash
-sudo dnf install -y vim fzf dnf-plugins-core
-```
-
-### 3. Install mise-en-place
-
-```bash
-sudo dnf copr enable jdxcode/mise
-sudo dnf install mise
-echo 'eval "$(mise activate bash)"' >> ~/.bashrc
-source ~/.bashrc
-```
-
-### 4. Install vim-plug
-
-```bash
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-```
-
-### 5. Initialize and apply dotfiles
-
-```bash
-mise use -g chezmoi@latest
-chezmoi init https://github.com/noppomario/dotfiles.git
-chezmoi apply
-```
-
-### 6. Install vim plugins
-
-```bash
-vim +PlugInstall +qall
-```
-
-### 7. Install development tools
-
-```bash
-mise install
-```
-
 ## Installed Tools
 
 After setup, the following tools will be available:
