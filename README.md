@@ -1,22 +1,10 @@
 # dotfiles
 
-## Setup mise-en-place & chezmoi
+Personal dotfiles for Fedora Linux
+
+## Setup
 
 ```bash
-sudo dnf copr enable jdxcode/mise
-sudo dnf install mise
-echo 'eval "$(mise activate bash)"' >> ~/.bashrc
-```
-
-## Clone dotfiles
-
-```bash
-chezmoi init https://github.com/noppomario/dotfiles.git
-```
-
-## Apply dotfiles
-
-```bash
-chezmoi apply
-mise install
+sudo dnf install -y git curl
+curl -fsSL https://raw.githubusercontent.com/noppomario/dotfiles/main/setup.sh | bash
 ```
