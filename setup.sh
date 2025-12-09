@@ -18,10 +18,6 @@ log_success() {
     echo -e "${GREEN}[SUCCESS]${NC} $1"
 }
 
-log_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
 log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
@@ -41,89 +37,22 @@ check_fedora() {
     fi
 }
 
-# Install required system packages
-install_system_packages() {
-    log_info "Installing required system packages..."
+# Install minimal prerequisites
+install_prerequisites() {
+    log_info "Installing minimal prerequisites (git, curl)..."
 
-    local packages=(
-        git
-        vim
-        curl
-        fzf
-        ripgrep
-        fd-find
-        ibus-mozc
-        gnome-tweaks
-        'dnf-command(copr)'
-    )
+    # Check if already installed
+    local to_install=()
+    command -v git &> /dev/null || to_install+=(git)
+    command -v curl &> /dev/null || to_install+=(curl)
 
-    log_info "Installing: ${packages[*]}"
-    sudo dnf install -y "${packages[@]}"
-
-    log_success "System packages installed successfully"
-}
-
-# Install Google Chrome
-install_chrome() {
-    if command -v google-chrome &> /dev/null; then
-        log_success "Google Chrome is already installed"
+    if [ ${#to_install[@]} -eq 0 ]; then
+        log_success "Prerequisites already installed"
         return 0
     fi
 
-    log_info "Installing Google Chrome..."
-
-    # Add Google Chrome repository
-    sudo tee /etc/yum.repos.d/google-chrome.repo > /dev/null <<'EOF'
-[google-chrome]
-name=google-chrome
-baseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64
-enabled=1
-gpgcheck=1
-gpgkey=https://dl.google.com/linux/linux_signing_key.pub
-EOF
-
-    sudo dnf install -y google-chrome-stable
-
-    log_success "Google Chrome installed successfully"
-}
-
-# Install VSCode Insiders
-install_vscode_insiders() {
-    if command -v code-insiders &> /dev/null; then
-        log_success "VSCode Insiders is already installed"
-        return 0
-    fi
-
-    log_info "Installing VSCode Insiders..."
-
-    # Add Microsoft repository
-    sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-    sudo tee /etc/yum.repos.d/vscode-insiders.repo > /dev/null <<'EOF'
-[code-insiders]
-name=Visual Studio Code Insiders
-baseurl=https://packages.microsoft.com/yumrepos/vscode-insiders
-enabled=1
-gpgcheck=1
-gpgkey=https://packages.microsoft.com/keys/microsoft.asc
-EOF
-
-    sudo dnf install -y code-insiders
-
-    log_success "VSCode Insiders installed successfully"
-}
-
-# Install OneDrive
-install_onedrive() {
-    if command -v onedrive &> /dev/null; then
-        log_success "OneDrive is already installed"
-        return 0
-    fi
-
-    log_info "Installing OneDrive..."
-    sudo dnf install -y onedrive
-
-    log_success "OneDrive installed successfully"
-    log_warning "Run 'onedrive' to complete authentication and setup"
+    sudo dnf install -y "${to_install[@]}"
+    log_success "Prerequisites installed successfully"
 }
 
 # Install mise-en-place
@@ -134,6 +63,12 @@ install_mise() {
     fi
 
     log_info "Installing mise-en-place..."
+
+    # Install dnf-plugins-core if not present
+    if ! dnf copr --help &> /dev/null 2>&1; then
+        sudo dnf install -y 'dnf-command(copr)'
+    fi
+
     sudo dnf copr enable -y jdxcode/mise
     sudo dnf install -y mise
 
@@ -142,15 +77,7 @@ install_mise() {
 
 # Configure mise in shell
 configure_mise_shell() {
-    local shell_rc=""
-
-    if [[ -n "$BASH_VERSION" ]]; then
-        shell_rc="$HOME/.bashrc"
-    elif [[ -n "$ZSH_VERSION" ]]; then
-        shell_rc="$HOME/.zshrc"
-    else
-        shell_rc="$HOME/.bashrc"
-    fi
+    local shell_rc="$HOME/.bashrc"
 
     if grep -q 'mise activate' "$shell_rc" 2>/dev/null; then
         log_success "mise is already configured in $shell_rc"
@@ -161,15 +88,9 @@ configure_mise_shell() {
 
     echo '' >> "$shell_rc"
     echo '# mise-en-place activation' >> "$shell_rc"
-
-    if [[ -n "$BASH_VERSION" ]] || [[ "$shell_rc" == *"bashrc"* ]]; then
-        echo 'eval "$(mise activate bash)"' >> "$shell_rc"
-    elif [[ -n "$ZSH_VERSION" ]] || [[ "$shell_rc" == *"zshrc"* ]]; then
-        echo 'eval "$(mise activate zsh)"' >> "$shell_rc"
-    fi
+    echo 'eval "$(mise activate bash)"' >> "$shell_rc"
 
     log_success "mise configured in $shell_rc"
-    log_warning "Please run 'source $shell_rc' or restart your shell to activate mise"
 }
 
 # Install chezmoi via mise
@@ -195,46 +116,6 @@ install_chezmoi() {
     log_success "chezmoi installed successfully"
 }
 
-# Install vim-plug
-install_vim_plug() {
-    local vim_plug_path="$HOME/.vim/autoload/plug.vim"
-
-    if [ -f "$vim_plug_path" ]; then
-        log_success "vim-plug is already installed"
-        return 0
-    fi
-
-    log_info "Installing vim-plug..."
-    curl -fLo "$vim_plug_path" --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-    log_success "vim-plug installed successfully"
-}
-
-# Install vim plugins
-install_vim_plugins() {
-    log_info "Installing vim plugins..."
-
-    # Skip if vimrc doesn't exist or doesn't use vim-plug
-    if [ ! -f "$HOME/.vimrc" ]; then
-        log_warning "~/.vimrc not found. Skipping vim plugin installation."
-        return 0
-    fi
-
-    if ! grep -q "plug#begin" "$HOME/.vimrc" 2>/dev/null; then
-        log_warning "vim-plug not configured in ~/.vimrc. Skipping plugin installation."
-        return 0
-    fi
-
-    log_info "Running vim +PlugInstall..."
-    vim +PlugInstall +qall || {
-        log_warning "vim plugin installation encountered issues. Please run ':PlugInstall' manually in vim."
-        return 0
-    }
-
-    log_success "Vim plugins installed successfully"
-}
-
 # Initialize dotfiles with chezmoi
 init_dotfiles() {
     eval "$(mise activate bash)" 2>/dev/null || true
@@ -242,7 +123,7 @@ init_dotfiles() {
     local repo_url="https://github.com/noppomario/dotfiles.git"
 
     if [ -d "$HOME/.local/share/chezmoi" ]; then
-        log_warning "chezmoi is already initialized. Skipping init..."
+        log_success "chezmoi is already initialized"
         return 0
     fi
 
@@ -268,54 +149,22 @@ apply_dotfiles() {
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         chezmoi apply
         log_success "Dotfiles applied successfully"
+        log_info "chezmoi will now run setup scripts..."
     else
-        log_warning "Skipping dotfiles application"
-        return 0
+        log_error "Setup cancelled by user"
+        exit 1
     fi
-}
-
-# Install tools via mise
-install_tools() {
-    eval "$(mise activate bash)" 2>/dev/null || true
-
-    log_info "Installing tools via mise..."
-
-    # Change to the dotfiles directory to read mise config
-    if [ -d "$HOME/.local/share/chezmoi" ]; then
-        cd "$HOME/.local/share/chezmoi"
-    fi
-
-    mise install
-
-    log_success "All tools installed successfully"
-}
-
-# Display installed tools
-show_installed_tools() {
-    eval "$(mise activate bash)" 2>/dev/null || true
-
-    log_info "Installed tools:"
-    mise list || true
 }
 
 # Main setup function
 main() {
-    log_info "Starting dotfiles setup for Fedora..."
+    log_info "Starting Fedora dotfiles setup..."
     echo
 
     check_fedora
     echo
 
-    install_system_packages
-    echo
-
-    install_chrome
-    echo
-
-    install_vscode_insiders
-    echo
-
-    install_onedrive
+    install_prerequisites
     echo
 
     install_mise
@@ -327,36 +176,16 @@ main() {
     install_chezmoi
     echo
 
-    install_vim_plug
-    echo
-
     init_dotfiles
     echo
 
     apply_dotfiles
     echo
 
-    install_vim_plugins
-    echo
-
-    install_tools
-    echo
-
-    show_installed_tools
-    echo
-
-    log_success "Setup completed successfully!"
+    log_success "Bootstrap completed successfully!"
     echo
     log_info "Please restart your shell or run: source ~/.bashrc"
-    log_info "Installed tools:"
-    log_info "  - Development: node, pnpm, python, uv, claude-code"
-    log_info "  - Utilities: ripgrep, fd-find, fzf, chezmoi"
-    log_info "  - Applications: Google Chrome, VSCode Insiders, OneDrive"
-    log_info "  - Japanese input: ibus-mozc"
-    log_info "  - GNOME: gnome-tweaks"
-    log_info "  - Vim with plugins (NERDTree, vim-airline, fzf.vim, vim-code-dark)"
-    echo
-    log_warning "OneDrive requires manual authentication. Run: onedrive"
+    log_info "All packages and applications have been installed via chezmoi scripts."
 }
 
 # Run main function
