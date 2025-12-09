@@ -50,6 +50,10 @@ install_system_packages() {
         vim
         curl
         fzf
+        ripgrep
+        fd-find
+        ibus-mozc
+        gnome-tweaks
         'dnf-command(copr)'
     )
 
@@ -57,6 +61,69 @@ install_system_packages() {
     sudo dnf install -y "${packages[@]}"
 
     log_success "System packages installed successfully"
+}
+
+# Install Google Chrome
+install_chrome() {
+    if command -v google-chrome &> /dev/null; then
+        log_success "Google Chrome is already installed"
+        return 0
+    fi
+
+    log_info "Installing Google Chrome..."
+
+    # Add Google Chrome repository
+    sudo tee /etc/yum.repos.d/google-chrome.repo > /dev/null <<'EOF'
+[google-chrome]
+name=google-chrome
+baseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64
+enabled=1
+gpgcheck=1
+gpgkey=https://dl.google.com/linux/linux_signing_key.pub
+EOF
+
+    sudo dnf install -y google-chrome-stable
+
+    log_success "Google Chrome installed successfully"
+}
+
+# Install VSCode Insiders
+install_vscode_insiders() {
+    if command -v code-insiders &> /dev/null; then
+        log_success "VSCode Insiders is already installed"
+        return 0
+    fi
+
+    log_info "Installing VSCode Insiders..."
+
+    # Add Microsoft repository
+    sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+    sudo tee /etc/yum.repos.d/vscode-insiders.repo > /dev/null <<'EOF'
+[code-insiders]
+name=Visual Studio Code Insiders
+baseurl=https://packages.microsoft.com/yumrepos/vscode-insiders
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+EOF
+
+    sudo dnf install -y code-insiders
+
+    log_success "VSCode Insiders installed successfully"
+}
+
+# Install OneDrive
+install_onedrive() {
+    if command -v onedrive &> /dev/null; then
+        log_success "OneDrive is already installed"
+        return 0
+    fi
+
+    log_info "Installing OneDrive..."
+    sudo dnf install -y onedrive
+
+    log_success "OneDrive installed successfully"
+    log_warning "Run 'onedrive' to complete authentication and setup"
 }
 
 # Install mise-en-place
@@ -242,6 +309,15 @@ main() {
     install_system_packages
     echo
 
+    install_chrome
+    echo
+
+    install_vscode_insiders
+    echo
+
+    install_onedrive
+    echo
+
     install_mise
     echo
 
@@ -272,13 +348,15 @@ main() {
     log_success "Setup completed successfully!"
     echo
     log_info "Please restart your shell or run: source ~/.bashrc"
-    log_info "Then you can use the following tools:"
-    log_info "  - node, pnpm (for JavaScript/TypeScript development)"
-    log_info "  - python, uv (for Python development)"
-    log_info "  - claude-code (Anthropic's Claude CLI)"
-    log_info "  - chezmoi (for managing dotfiles)"
-    log_info "  - fzf (for fuzzy file finding)"
-    log_info "  - vim with plugins (NERDTree, vim-airline, fzf.vim, vim-code-dark)"
+    log_info "Installed tools:"
+    log_info "  - Development: node, pnpm, python, uv, claude-code"
+    log_info "  - Utilities: ripgrep, fd-find, fzf, chezmoi"
+    log_info "  - Applications: Google Chrome, VSCode Insiders, OneDrive"
+    log_info "  - Japanese input: ibus-mozc"
+    log_info "  - GNOME: gnome-tweaks"
+    log_info "  - Vim with plugins (NERDTree, vim-airline, fzf.vim, vim-code-dark)"
+    echo
+    log_warning "OneDrive requires manual authentication. Run: onedrive"
 }
 
 # Run main function
