@@ -95,9 +95,6 @@ configure_mise_shell() {
 
 # Install chezmoi via mise
 install_chezmoi() {
-    # Activate mise in current shell
-    eval "$(mise activate bash)" 2>/dev/null || true
-
     if command -v chezmoi &> /dev/null; then
         log_success "chezmoi is already installed"
         return 0
@@ -107,7 +104,6 @@ install_chezmoi() {
     mise use -g chezmoi@latest
 
     # Verify installation
-    eval "$(mise activate bash)" 2>/dev/null || true
     if ! command -v chezmoi &> /dev/null; then
         log_error "chezmoi installation failed"
         exit 1
@@ -118,8 +114,6 @@ install_chezmoi() {
 
 # Initialize dotfiles with chezmoi
 init_dotfiles() {
-    eval "$(mise activate bash)" 2>/dev/null || true
-
     local repo_url="https://github.com/noppomario/dotfiles.git"
 
     if [ -d "$HOME/.local/share/chezmoi" ]; then
@@ -135,8 +129,6 @@ init_dotfiles() {
 
 # Apply dotfiles
 apply_dotfiles() {
-    eval "$(mise activate bash)" 2>/dev/null || true
-
     log_info "Applying dotfiles..."
 
     # Show diff before applying
@@ -171,6 +163,10 @@ main() {
     echo
 
     configure_mise_shell
+    echo
+
+    # Activate mise for current shell session
+    eval "$(mise activate bash)" 2>/dev/null || true
     echo
 
     install_chezmoi
