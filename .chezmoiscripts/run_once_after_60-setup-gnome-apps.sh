@@ -18,9 +18,9 @@ if command -v ptyxis &> /dev/null; then
     profile=$(gsettings get org.gnome.Ptyxis default-profile-uuid 2>/dev/null | tr -d "'")
 
     if [ -n "$profile" ] && [ "$profile" != "" ]; then
-        # Configure cursor settings
+        # Configure cursor settings (blinking line cursor)
         gsettings set org.gnome.Ptyxis.Profile:/org/gnome/Ptyxis/Profiles/$profile/ cursor-blink-mode 'on' 2>/dev/null || true
-        gsettings set org.gnome.Ptyxis.Profile:/org/gnome/Ptyxis/Profiles/$profile/ cursor-shape 'block' 2>/dev/null || true
+        gsettings set org.gnome.Ptyxis.Profile:/org/gnome/Ptyxis/Profiles/$profile/ cursor-shape 'ibeam' 2>/dev/null || true
         echo "[INFO] Ptyxis terminal configured"
     fi
 fi
