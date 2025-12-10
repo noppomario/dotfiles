@@ -5,6 +5,8 @@ set -e
 echo "[INFO] Installing system packages..."
 
 packages=(
+    git
+    curl
     vim
     fzf
     ripgrep
