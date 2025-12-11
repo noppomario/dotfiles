@@ -135,23 +135,24 @@ apply_dotfiles() {
     log_info "Changes that will be applied:"
     chezmoi diff || true
 
-    # Ask for confirmation
-    read -p "Do you want to apply these changes? (y/N) " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        chezmoi apply
-        log_success "Dotfiles applied successfully"
-        log_info "chezmoi will now run setup scripts..."
-    else
-        log_error "Setup cancelled by user"
-        exit 1
-    fi
+    chezmoi apply
+    log_success "Dotfiles applied successfully"
+    log_info "chezmoi will now run setup scripts..."
 }
 
 # Main setup function
 main() {
     log_info "Starting Fedora dotfiles setup..."
     echo
+
+    if [ -z "$CI" ]; then
+        read -p "Do you want to start setup? (y/N): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            log_info "Setup cancelled by user"
+            exit 0
+        fi
+    fi
 
     check_fedora
     echo

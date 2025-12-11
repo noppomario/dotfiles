@@ -4,6 +4,13 @@ set -e
 
 echo "[INFO] Setting up Flatpak applications..."
 
+# Check if Flatpak is installed, install if not
+if ! command -v flatpak &> /dev/null; then
+    echo "[INFO] Flatpak not found, installing..."
+    dnf install -y flatpak
+    echo "[SUCCESS] Flatpak installed"
+fi
+
 # Ensure Flathub repository is available
 if ! flatpak remote-list | grep -q flathub; then
     echo "[INFO] Adding Flathub repository..."
