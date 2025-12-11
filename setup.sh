@@ -166,7 +166,8 @@ main() {
     echo
 
     # Activate mise for current shell session
-    eval "$(mise activate bash)" 2>/dev/null || true
+    # eval "$(mise activate bash)" 2>/dev/null || true
+    export PATH="$HOME/.local/share/mise/shims:$PATH"
     echo
 
     install_chezmoi

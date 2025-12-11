@@ -3,7 +3,8 @@
 set -e
 
 # Activate mise
-eval "$(mise activate bash)" 2>/dev/null || true
+# eval "$(mise activate bash)" 2>/dev/null || true
+export PATH="$HOME/.local/share/mise/shims:$PATH"
 
 echo "[INFO] Installing development tools via mise..."
 

@@ -9,17 +9,17 @@ fi
 
 echo "[INFO] Installing VSCode Insiders..."
 
-# Add Microsoft repository
-sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-sudo tee /etc/yum.repos.d/vscode-insiders.repo > /dev/null <<'EOF'
-[code-insiders]
-name=Visual Studio Code Insiders
-baseurl=https://packages.microsoft.com/yumrepos/vscode-insiders
+# Add Microsoft VSCode repository
+sudo tee /etc/yum.repos.d/vscode.repo > /dev/null <<EOF
+[code]
+name=Visual Studio Code
+baseurl=https://packages.microsoft.com/yumrepos/vscode
 enabled=1
 gpgcheck=1
 gpgkey=https://packages.microsoft.com/keys/microsoft.asc
 EOF
 
+# Install VSCode Insiders
 sudo dnf install -y code-insiders
 
 echo "[SUCCESS] VSCode Insiders installed"
