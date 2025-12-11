@@ -7,7 +7,7 @@ echo "[INFO] Setting up Flatpak applications..."
 # Check if Flatpak is installed, install if not
 if ! command -v flatpak &> /dev/null; then
     echo "[INFO] Flatpak not found, installing..."
-    dnf install -y flatpak
+    sudo dnf install -y flatpak
     echo "[SUCCESS] Flatpak installed"
 fi
 
