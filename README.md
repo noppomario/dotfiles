@@ -33,7 +33,11 @@ Japanese folders are automatically converted to English. Old Japanese folders ca
 
 ## Testing
 
+Test the setup script in a clean container environment:
+
 ```bash
 cd ~/.local/share/chezmoi
-bash ./test-chezmoi.sh
+./tests/test-chezmoi.sh
 ```
+
+See [tests/README.md](tests/README.md) for details.
