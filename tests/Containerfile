@@ -1,0 +1,31 @@
+# Test environment for dotfiles setup
+# This Containerfile is for testing purposes only and is not part of the main dotfiles deployment
+FROM fedora:43
+
+LABEL maintainer="noppomario"
+LABEL description="Test environment for dotfiles setup script"
+LABEL purpose="testing-only"
+
+# Install minimal dependencies for testing
+# Note: setup.sh will install git, curl, and other tools if needed
+RUN dnf update -y && \
+    dnf install -y \
+    sudo \
+    systemd \
+    procps-ng \
+    && dnf clean all
+
+# Create a test user with sudo privileges
+# Using /etc/sudoers.d/ for safer sudo configuration
+RUN useradd -m -s /bin/bash testuser && \
+    echo "testuser ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/testuser && \
+    chmod 0440 /etc/sudoers.d/testuser
+
+# Set up working directory
+WORKDIR /home/testuser
+
+# Switch to test user
+USER testuser
+
+# Default command
+CMD ["/bin/bash"]
