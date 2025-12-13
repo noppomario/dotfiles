@@ -48,10 +48,12 @@ fi
 
 # Build test image
 log_info "Building test image from Containerfile..."
+set +e  # Temporarily disable exit on error to handle build failure gracefully
 podman build -t "$IMAGE_NAME" -f "$SCRIPT_DIR/Containerfile" "$SCRIPT_DIR"
 
 if [ $? -eq 0 ]; then
     log_success "Test image built successfully"
+    set -e  # Re-enable exit on error
 else
     log_error "Failed to build test image"
     exit 1

@@ -16,8 +16,10 @@ RUN dnf update -y && \
     && dnf clean all
 
 # Create a test user with sudo privileges
+# Using /etc/sudoers.d/ for safer sudo configuration
 RUN useradd -m -s /bin/bash testuser && \
-    echo "testuser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+    echo "testuser ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/testuser && \
+    chmod 0440 /etc/sudoers.d/testuser
 
 # Set up working directory
 WORKDIR /home/testuser
