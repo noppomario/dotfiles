@@ -1,6 +1,7 @@
 [tools]
 chezmoi = "latest"
 go = "latest"
+"go:github.com/wailsapp/wails/v2/cmd/wails" = "latest"
 node = "latest"
 "npm:@anthropic-ai/claude-code" = "latest"
 pnpm = "latest"
