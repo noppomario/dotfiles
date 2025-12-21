@@ -94,6 +94,7 @@ function codeinsiders() {
     /usr/bin/code-insiders "$@"
 }
 alias code='codeinsiders'
+alias update-vscode='sudo dnf update -y code-insiders'
 
 # cdしたら即座にlsを実行
 function cdls() {

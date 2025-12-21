@@ -1,5 +1,6 @@
 [tools]
 chezmoi = "latest"
+go = "latest"
 node = "latest"
 "npm:@anthropic-ai/claude-code" = "latest"
 pnpm = "latest"
