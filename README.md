@@ -12,7 +12,8 @@ Personal dotfiles for Fedora Linux
 
 ```bash
 sudo dnf install -y curl
-curl -fsSL https://raw.githubusercontent.com/noppomario/dotfiles/main/setup.sh | bash
+curl -fsSL \
+  https://raw.githubusercontent.com/noppomario/dotfiles/main/setup.sh | bash
 ```
 
 ## Post-Setup Steps
@@ -29,7 +30,8 @@ After installation, manually configure OneDrive:
 
 ### English Folders
 
-Japanese folders are automatically converted to English. Old Japanese folders can be manually deleted if needed.
+Japanese folders are automatically converted to English. Old Japanese folders can
+be manually deleted if needed.
 
 ## Testing
 
