@@ -48,6 +48,10 @@ chezmoi edit .bashrc
 
 # Re-add directly edited files
 chezmoi add .config/mise/config.toml
+
+# Re-add All diff files
+chezmoi diff
+chezmoi re-add
 ```
 
 ### mise
@@ -76,4 +80,11 @@ mise use -g npm:prettier
 ```bash
 # Reload shortcut
 brc
+```
+
+### uv
+
+```bash
+# Global install
+uv tool install <a library which you want to install>
 ```
