@@ -2,11 +2,14 @@
 bun = "latest"
 chezmoi = "latest"
 go = "latest"
-"go:github.com/wailsapp/wails/v2/cmd/wails" = "latest"
 node = "latest"
 "npm:@anthropic-ai/claude-code" = "latest"
 "npm:markdownlint-cli2" = "latest"
-pnpm = "latest"
 python = "latest"
 rust = "latest"
 uv = "latest"
+
+[settings]
+
+[settings.npm]
+package_manager = "bun"
