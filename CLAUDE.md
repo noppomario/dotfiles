@@ -32,3 +32,20 @@ bash ./test-chezmoi.sh
   - `run_once_after_*`: Run after applying dotfiles
 - `dot_*`: Synced to home directory (dot_ prefix becomes .)
 - `dot_claude/`: Custom Claude Code skills (pr-workflow, markdown-fix)
+
+## mise Version Policy
+
+Version pinning strategy for tools in `dot_config/mise/config.toml`:
+
+| Category          | Policy          | Examples                            |
+| ----------------- | --------------- | ----------------------------------- |
+| Language runtimes | Pin major.minor | `python`, `node`, `go`, `rust`      |
+| CLI tools         | Use latest      | `chezmoi`, `uv`, `markdownlint-cli2`|
+| Claude Code       | Use latest      | Always want newest features         |
+
+Notes:
+
+- `uv`: Package manager tool. Safe to use latest as project dependencies are
+  managed by `pyproject.toml` / `uv.lock`, not by uv version itself.
+
+Review versions periodically when major releases occur.

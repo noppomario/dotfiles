@@ -1,0 +1,36 @@
+#!/bin/bash
+
+EVENT_TYPE="${1:-unknown}"
+NTFY_TOPIC="{{ .ntfy_topic }}"
+
+# Get project name from CLAUDE_PROJECT_DIR or current directory
+PROJECT_NAME=$(basename "${CLAUDE_PROJECT_DIR:-$(pwd)}")
+
+# Check if screen is locked (GNOME Shell)
+LOCK_STATUS=$(gdbus call --session \
+  --dest org.gnome.Shell \
+  --object-path /org/gnome/ScreenSaver \
+  --method org.gnome.ScreenSaver.GetActive 2>/dev/null)
+# Output: (true,) or (false,)
+if [[ "$LOCK_STATUS" == *"true"* ]]; then
+    LOCKED=1
+else
+    LOCKED=0
+fi
+
+# Notify if: screen locked OR idle for 3+ minutes
+if [ "$LOCKED" -eq 1 ]; then
+    case "$EVENT_TYPE" in
+        permission)
+            MSG="🔐 承認待ち: $PROJECT_NAME"
+            ;;
+        complete)
+            MSG="✅ 完了: $PROJECT_NAME"
+            ;;
+        *)
+            MSG="📢 $PROJECT_NAME: $EVENT_TYPE"
+            ;;
+    esac
+
+    curl -s -d "$MSG" "ntfy.sh/$NTFY_TOPIC"
+fi

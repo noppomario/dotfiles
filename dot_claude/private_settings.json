@@ -1,0 +1,29 @@
+{
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "example-skills@anthropic-agent-skills": true
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "permission_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/smart-notify.sh permission"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/smart-notify.sh complete"
+          }
+        ]
+      }
+    ]
+  }
+}

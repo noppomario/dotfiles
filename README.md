@@ -10,6 +10,22 @@ Personal dotfiles for Fedora Linux
 
 ## Setup
 
+### 1. Create config file (before running setup.sh)
+
+```bash
+mkdir -p ~/.config/chezmoi
+cat > ~/.config/chezmoi/chezmoi.toml << 'EOF'
+[data]
+  ntfy_topic = "your-ntfy-topic"
+EOF
+```
+
+| Variable     | Used in                            | Description        |
+| ------------ | ---------------------------------- | ------------------ |
+| `ntfy_topic` | `dot_claude/hooks/smart-notify.sh` | ntfy.sh topic name |
+
+### 2. Run setup script
+
 ```bash
 sudo dnf install -y curl
 curl -fsSL \
@@ -69,12 +85,15 @@ mise use -g go:github.com/wailsapp/wails/v2/cmd/wails@latest
 
 # For npm install
 mise use -g npm:prettier
+
+# For **uv** install
+mise use -g pipx:<tool>
 ```
 
 > **Note:** After making these changes, always run:
 >
 > ```bash
-> chezmoi add .config/mise/config.toml
+> chezmoi re-add
 > ```
 
 ### bash alias
@@ -82,11 +101,4 @@ mise use -g npm:prettier
 ```bash
 # Reload shortcut
 brc
-```
-
-### uv
-
-```bash
-# Global install
-uv tool install <a library which you want to install>
 ```
