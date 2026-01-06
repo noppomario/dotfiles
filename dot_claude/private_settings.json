@@ -25,5 +25,12 @@
         ]
       }
     ]
+  },
+  "permissions": {
+    "allow": [
+      "WebFetch",
+      "WebSearch",
+      "mcp__context7__*"
+    ]
   }
 }
