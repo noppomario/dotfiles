@@ -1,7 +1,32 @@
 {
-  "enabledPlugins": {
-    "context7@claude-plugins-official": true,
-    "example-skills@anthropic-agent-skills": true
+  "permissions": {
+    "allow": [
+      "WebFetch",
+      "WebSearch",
+      "mcp__plugin_context7_context7__*",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(wc:*)",
+      "Bash(git branch:*)",
+      "Bash(git fetch:*)",
+      "Bash(git tag:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh project list:*)",
+      "Bash(gh project view:*)",
+      "Bash(gh project field-list:*)",
+      "Bash(gh project item-list:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh auth status:*)",
+      "Bash(markdownlint-cli2:*)",
+      "Skill(markdown-fix)",
+      "Skill(markdown-fix:*)",
+      "Read(//home/noppo/.local/share/chezmoi/**)"
+    ]
   },
   "hooks": {
     "Notification": [
@@ -26,11 +51,9 @@
       }
     ]
   },
-  "permissions": {
-    "allow": [
-      "WebFetch",
-      "WebSearch",
-      "mcp__context7__*"
-    ]
-  }
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "example-skills@anthropic-agent-skills": true
+  },
+  "language": "Japanese"
 }

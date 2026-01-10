@@ -34,6 +34,14 @@ curl -fsSL \
 
 ## Post-Setup Steps
 
+### uti Setup
+
+After installation, log out and log back in to apply input group membership, then:
+
+```bash
+gnome-extensions enable uti@noppomario.github.io
+```
+
 ### OneDrive Setup
 
 After installation, manually configure OneDrive:

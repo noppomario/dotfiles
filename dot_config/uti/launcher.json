@@ -22,7 +22,7 @@
     },
     {
       "id": "vscode-insiders",
-      "name": "VSCode Insiders",
+      "name": "VSCode",
       "command": "code-insiders",
       "args": [],
       "historySource": {
@@ -31,10 +31,10 @@
       }
     },
     {
-      "id": "ptyxis",
+      "id": "ghostty",
       "name": "Terminal",
-      "command": "ptyxis",
-      "args": ["--new-window"]
+      "command": "ghostty",
+      "args": []
     }
   ]
 }

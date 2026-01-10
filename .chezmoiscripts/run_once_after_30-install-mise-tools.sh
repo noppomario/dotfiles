@@ -2,8 +2,13 @@
 
 set -e
 
-# Activate mise
-# eval "$(mise activate bash)" 2>/dev/null || true
+# Install mise if not present
+if ! command -v mise &> /dev/null; then
+    echo "[INFO] Installing mise..."
+    curl https://mise.run | sh
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 
 echo "[INFO] Installing development tools via mise..."
