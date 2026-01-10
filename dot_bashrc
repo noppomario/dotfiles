@@ -24,7 +24,6 @@ if [ -d ~/.bashrc.d ]; then
 fi
 unset rc
 eval "$(mise activate bash)"
-eval "$(zoxide init bash --cmd cd)"
 
 # ----- 基本設定 -----
 
@@ -97,5 +96,6 @@ function codeinsiders() {
 alias code='codeinsiders'
 alias update-vscode='sudo dnf update -y code-insiders'
 
-
+# ----- Shell enhancements (must be at the end) -----
+eval "$(zoxide init bash --cmd cd)"
 
