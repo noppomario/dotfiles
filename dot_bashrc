@@ -24,6 +24,7 @@ if [ -d ~/.bashrc.d ]; then
 fi
 unset rc
 eval "$(mise activate bash)"
+eval "$(zoxide init bash --cmd cd)"
 
 # ----- 基本設定 -----
 
@@ -96,10 +97,5 @@ function codeinsiders() {
 alias code='codeinsiders'
 alias update-vscode='sudo dnf update -y code-insiders'
 
-# cdしたら即座にlsを実行
-function cdls() {
-    builtin cd "$@" && ls
-}
-alias cd='cdls'
 
 

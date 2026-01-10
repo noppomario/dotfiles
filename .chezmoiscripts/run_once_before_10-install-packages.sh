@@ -11,6 +11,7 @@ packages=(
     fzf
     ripgrep
     fd-find
+    zoxide
     ibus-mozc
     gnome-tweaks
 )
