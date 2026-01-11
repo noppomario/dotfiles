@@ -25,7 +25,8 @@
       "Bash(markdownlint-cli2:*)",
       "Skill(markdown-fix)",
       "Skill(markdown-fix:*)",
-      "Read(//home/noppo/.local/share/chezmoi/**)"
+      "Read(//home/noppo/.local/share/chezmoi/**)",
+      "Read(//home/noppo/.cargo/registry/src/**)"
     ]
   },
   "hooks": {
@@ -53,7 +54,7 @@
   },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
-    "example-skills@anthropic-agent-skills": true
+    "example-skills@anthropic-agent-skills": false
   },
   "language": "Japanese"
 }
