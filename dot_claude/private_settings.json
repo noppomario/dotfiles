@@ -1,32 +1,76 @@
 {
+  "language": "Japanese",
   "permissions": {
     "allow": [
       "WebFetch",
       "WebSearch",
+
+      "mcp__claude_ai_Context7__query-docs",
+      "mcp__claude_ai_Context7__resolve-library-id",
       "mcp__plugin_context7_context7__*",
+
+      "Bash(bun run:*)",
+      "Bash(bunx:*)",
+      "Bash(cargo build:*)",
+      "Bash(cargo check:*)",
+      "Bash(cargo clippy:*)",
+      "Bash(cargo doc:*)",
+      "Bash(cargo fmt:*)",
+      "Bash(cargo search:*)",
+      "Bash(cargo test:*)",
+      "Bash(markdownlint-cli2:*)",
+
       "Bash(ls:*)",
-      "Bash(cat:*)",
+      "Bash(mkdir:*)",
+      "Bash(tree:*)",
       "Bash(wc:*)",
+      "Bash(which:*)",
+
       "Bash(git branch:*)",
-      "Bash(git fetch:*)",
-      "Bash(git tag:*)",
       "Bash(git check-ignore:*)",
+      "Bash(git checkout:*)",
+      "Bash(git fetch:*)",
+      "Bash(git log:*)",
+      "Bash(git tag:*)",
+
+      "Bash(gh auth status:*)",
+      "Bash(gh issue comment:*)",
       "Bash(gh issue list:*)",
       "Bash(gh issue view:*)",
       "Bash(gh pr list:*)",
       "Bash(gh pr view:*)",
-      "Bash(gh project list:*)",
-      "Bash(gh project view:*)",
       "Bash(gh project field-list:*)",
       "Bash(gh project item-list:*)",
+      "Bash(gh project list:*)",
+      "Bash(gh project view:*)",
       "Bash(gh run list:*)",
       "Bash(gh run view:*)",
-      "Bash(gh auth status:*)",
-      "Bash(markdownlint-cli2:*)",
+
+      "Bash(busctl:*)",
+      "Bash(dnf history:*)",
+      "Bash(dnf info:*)",
+      "Bash(flatpak list:*)",
+      "Bash(gnome-extensions list:*)",
+      "Bash(gnome-extensions show:*)",
+      "Bash(gsettings get:*)",
+      "Bash(journalctl:*)",
+      "Bash(mise list:*)",
+      "Bash(pgrep:*)",
+      "Bash(rpm -q:*)",
+      "Bash(systemctl --user status:*)",
+      "Bash(systemctl status:*)",
+
       "Skill(markdown-fix)",
       "Skill(markdown-fix:*)",
-      "Read(//home/noppo/.local/share/chezmoi/**)",
-      "Read(//home/noppo/.cargo/registry/src/**)"
+
+      "Read(~/.cargo/registry/src/**)",
+      "Read(~/.config/autostart/**)",
+      "Read(~/.local/share/chezmoi/**)",
+      "Read(//tmp/**)",
+      "Read(//usr/bin/**)"
+    ],
+    "deny": [
+      "Bash(sudo *)"
     ]
   },
   "hooks": {
@@ -54,7 +98,10 @@
   },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
-    "example-skills@anthropic-agent-skills": false
-  },
-  "language": "Japanese"
+    "example-skills@anthropic-agent-skills": false,
+    "gopls-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
+  }
 }

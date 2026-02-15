@@ -82,7 +82,10 @@ markdownファイル作成・編集後は `markdown-fix` スキルで検証・�
 
 - GitHubの操作が必要な場合は`gh`コマンドを使用すること
 - npmパッケージの管理には`bun`コマンドを利用すること
+- Pythonパッケージの管理には`uv`コマンドを利用すること（`pip`は使わない）
 - npmパッケージのグローバルインストールには`mise use -g npm:<xxx>`コマンドを利用すること
+- Pythonパッケージのグローバルインストールには`mise use -g pipx:<xxx>`コマンドを利用すること（内部でuvxを使用）
+- Goツールのグローバルインストールには`mise use -g go:<module-path>`コマンドを利用すること
 
 ### GitHub PRのコメント取得
 
@@ -93,6 +96,46 @@ PRのコメントを確認する際は `gh pr view <number> --comments` を使�
 - `issues/{id}/comments` — PR本文下の一般コメント（`--json comments` はこれのみ）
 - `pulls/{id}/reviews` — レビュー本体（approve/request changes等）
 - `pulls/{id}/comments` — コード行へのインラインコメント
+
+## settings.json 編集規則
+
+`~/.claude/settings.json` を編集する際は以下を遵守すること。
+
+### パス表記
+
+- ホームディレクトリ配下のパスは `~` を使用（例: `Read(~/.config/**)`）
+- システムパスのみ `//` で絶対指定（例: `Read(//usr/bin/**)`）
+
+### 並び順
+
+トップレベルキー: `language` → `permissions` → `hooks` → `enabledPlugins`
+
+`permissions.allow` 内のカテゴリ順:
+
+1. Web（WebFetch, WebSearch）
+2. MCP
+3. Bash — ビルド/開発ツール（bun, cargo, markdownlint等）
+4. Bash — ファイル操作（ls, mkdir, tree等）
+5. Bash — Git
+6. Bash — GitHub CLI
+7. Bash — システム管理
+8. Skill
+9. Read パス（`~` → `//` の順）
+
+各カテゴリ内はアルファベット順。カテゴリ間は空行で区切る。
+
+`enabledPlugins` 内もアルファベット順。
+
+### 専用ツールとの重複禁止
+
+Claude Codeの専用ツール（Glob, Grep, Read）で代替可能なBashコマンド（`find`, `grep`, `cat`等）について:
+
+- `permissions.allow` に追加しないこと
+- タスク実行時も専用ツールを優先すること（システムプロンプトの指示と同様）
+
+## sudo禁止
+
+`sudo`コマンドを実行してはならない。root権限が必要な操作はユーザーに実行コマンドを提示し、手動実行を依頼すること。
 
 ## コーディングスタイル
 
