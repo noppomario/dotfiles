@@ -41,7 +41,6 @@ Version pinning strategy for tools in `dot_config/mise/config.toml`:
 | ----------------- | --------------- | ----------------------------------- |
 | Language runtimes | Pin major.minor | `python`, `node`, `go`, `rust`      |
 | CLI tools         | Use latest      | `chezmoi`, `uv`, `markdownlint-cli2`|
-| Claude Code       | Use latest      | Always want newest features         |
 
 Notes:
 

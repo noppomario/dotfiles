@@ -3,6 +3,8 @@
 
 set -e
 
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+
 if ! command -v rustup &> /dev/null; then
     echo "[INFO] rustup not found, skipping Rust component installation"
     exit 0
