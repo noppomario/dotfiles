@@ -60,7 +60,7 @@
     "shift-f2": "space.rename",
     "ctrl-shift-space": "mod.open:float-space",
     "ctrl-shift-i": "mod.open:open-vscode",
-    "ctrl-shift-y": "mod.open:atuin-threads",
+    "ctrl-shift-y": "mod.open:my-atuin-threads",
     "ctrl-shift-r": "mod.open:revive"
   },
   "terminal": {

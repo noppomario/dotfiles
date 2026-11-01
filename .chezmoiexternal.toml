@@ -15,12 +15,6 @@ url = "https://github.com/CacaoRick/herdr-open-vscode/archive/a1a36932823a2d7124
 stripComponents = 3
 include = ["*/mods/open-vscode/**"]
 
-# https://github.com/atuinsh/herdr-atuin-threads
-[".config/herdr-app/mods/atuin-threads"]
-type = "archive"
-url = "https://github.com/atuinsh/herdr-atuin-threads/archive/6e2786d1ae7555cbe4c338c55c265badc86812cb.tar.gz"
-stripComponents = 3
-include = ["*/mods/atuin-threads/**"]
 
 # https://github.com/dmazlum/herdr-revive
 [".config/herdr-app/mods/revive"]

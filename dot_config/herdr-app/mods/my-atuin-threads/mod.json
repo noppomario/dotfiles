@@ -1,0 +1,12 @@
+{
+  "place": "none",
+  "title": "Threads",
+  "overlay": {
+    "width": 400,
+    "height": 560
+  },
+  "cloned_from": {
+    "name": "atuin-threads",
+    "version": "0.1.11"
+  }
+}

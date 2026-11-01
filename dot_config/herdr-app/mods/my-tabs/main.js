@@ -98,8 +98,8 @@ export default class Tabs extends View {
       .when(enabled.includes("changes"), el => el.child(panelButton("changes", "Changes", "mods/changes/changes.svg")))
       /* my: atuin-threads picker */
       .child(h_flex().id("my-threads").h(26).px(8).gap(5).flex_none().items_center().rounded(6).text_size(12).bg(t.chrome).text_color(t.muted)
-        .hover(s => s.bg(t.hover)).on_mouse_down("left", stop).on_click(() => run("mod.open", { name: "atuin-threads" }))
-        .child(svg("mods/atuin-threads/threads.svg").size(14)).child("Threads"))
+        .hover(s => s.bg(t.hover)).on_mouse_down("left", stop).on_click(() => run("mod.open", { name: "my-atuin-threads" }))
+        .child(svg("mods/my-atuin-threads/threads.svg").size(14)).child("Threads"))
       .when(w?.buttons, el => el.child(button("minimize", w.platform === "windows" ? svg("mods/my-tabs/win-min.svg").size(16) : "−", () => run("window.minimize")))
         .child(button("maximize", w.platform === "windows" ? svg(`mods/my-tabs/${w.maximized ? "win-restore" : "win-max"}.svg`).size(16) : "□", () => run("window.maximize")))
         .child(button("close-window", w.platform === "windows" ? svg("mods/my-tabs/win-close.svg").size(16) : svg("mods/pane/close.svg").size(13), () => run("window.close"))));
