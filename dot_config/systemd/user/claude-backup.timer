@@ -1,0 +1,10 @@
+[Unit]
+Description=Check daily (and shortly after login) whether a Claude Code backup is due
+
+[Timer]
+OnStartupSec=2min
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target

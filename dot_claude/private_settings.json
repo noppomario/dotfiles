@@ -97,11 +97,24 @@
     ]
   },
   "enabledPlugins": {
-    "context7@claude-plugins-official": true,
     "example-skills@anthropic-agent-skills": false,
     "gopls-lsp@claude-plugins-official": true,
+    "noppomario-mod@noppo-claudecode-plugins": true,
     "pyright-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true
-  }
+  },
+  "extraKnownMarketplaces": {
+    "noppo-claudecode-plugins": {
+      "source": {
+        "source": "directory",
+        "path": "/home/noppo/Git/claudecode-plugins"
+      }
+    }
+  },
+  "outputStyle": "Concise",
+  "tui": "fullscreen",
+  "remoteControlAtStartup": true,
+  "agentPushNotifEnabled": true,
+  "cleanupPeriodDays": 9999
 }

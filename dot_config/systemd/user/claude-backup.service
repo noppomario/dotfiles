@@ -1,0 +1,7 @@
+[Unit]
+Description=Ask and back up Claude Code transcripts to OneDrive
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/claude-backup

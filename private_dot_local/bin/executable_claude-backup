@@ -1,0 +1,40 @@
+#!/bin/bash
+# Back up Claude Code transcripts to OneDrive after asking via desktop notification.
+# Triggered by claude-backup.timer; skips if the last backup is recent.
+
+set -euo pipefail
+
+SRC="$HOME/.claude/projects/"
+DEST="$HOME/OneDrive/claude-backup/projects/"
+STAMP="${XDG_STATE_HOME:-$HOME/.local/state}/claude-backup/last"
+INTERVAL_DAYS=7
+
+if [ "${1:-}" != "--force" ] && [ -f "$STAMP" ] &&
+    [ -z "$(find "$STAMP" -mtime +$((INTERVAL_DAYS - 1)))" ]; then
+    exit 0
+fi
+
+if [ ! -d "$HOME/OneDrive" ]; then
+    echo "[INFO] ~/OneDrive not found, skipping"
+    exit 0
+fi
+
+# Critical urgency keeps the banner on screen; clicking the body ("default") also means yes
+action=$(notify-send --app-name="Claude Backup" --icon=drive-harddisk -u critical \
+    --action=default="バックアップ" --action=backup="バックアップ" --action=later="後で" \
+    "Claude Code 会話ログのバックアップ" "OneDrive に同期しますか？（本文クリックでも実行）" || true)
+echo "[INFO] selected action: ${action:-<dismissed>}"
+case "$action" in
+    backup | default) ;;
+    *) exit 0 ;;
+esac
+
+mkdir -p "$DEST" "$(dirname "$STAMP")"
+# No --delete: keep transcripts that Claude Code has cleaned up locally
+if rsync -a "$SRC" "$DEST"; then
+    touch "$STAMP"
+    notify-send --app-name="Claude Backup" "バックアップ完了" "$DEST"
+else
+    notify-send --app-name="Claude Backup" -u critical "バックアップ失敗" "journalctl --user -u claude-backup で確認"
+    exit 1
+fi

@@ -1,0 +1,11 @@
+#!/bin/bash
+# Enable claude-backup timer (re-runs when unit files change)
+# service: {{ include "dot_config/systemd/user/claude-backup.service" | sha256sum }}
+# timer: {{ include "dot_config/systemd/user/claude-backup.timer" | sha256sum }}
+
+set -e
+
+systemctl --user daemon-reload
+systemctl --user enable --now claude-backup.timer
+
+echo "[SUCCESS] claude-backup.timer enabled"
