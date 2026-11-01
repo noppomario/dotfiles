@@ -49,14 +49,14 @@ export default class NewMenu extends View {
         const agent = /^[1-9]$/.test(e.key) ? installed[Number(e.key) - 1] : null;
         if (!agent) return;
         closeOverlay(props().overlay);
-        run("tab.new", { name: agent.name, space: space?.id, argv: agent.run, folder: panes().find(p => p.focused)?.cwd }); /* my: argv tabs ignore the focused folder (herdr 0.1.11) */
+        run("tab.new", { space: space?.id, argv: agent.run, folder: panes().find(p => p.focused)?.cwd }); /* my: no name (numbered like Terminal tabs); argv tabs ignore the focused folder (herdr 0.1.11) */
       })
       .child(this.row("terminal", svg("icons/shell.svg").size(14), "Terminal", () => run("tab.new", { space: space?.id }), shortcut("tab.new")))
       .child(this.row("vscode", svg("mods/open-vscode/vscode.svg").size(14), "Open in VS Code", () => run("mod.open", { name: "open-vscode" }))) // my: open-vscode
       .child(div().h(26).flex_none().px(9).pt(8).pb(4).text_size(11).text_color(t.dim).child("Start an agent"))
       .child(v_flex().flex_1().min_h(0).overflow_y_scrollbar()
         .children(choices.map((a, i) => this.row(a.key, a.tint ? svg(a.icon).size(14).text_color(t.foreground) : image(a.icon).size(14), a.name,
-          () => run("tab.new", { name: a.name, space: space?.id, argv: a.run, folder: panes().find(p => p.focused)?.cwd }) /* my: see above */, a.installed ? (i < 9 ? String(i + 1) : "") : "not installed", a.installed)))
+          () => run("tab.new", { space: space?.id, argv: a.run, folder: panes().find(p => p.focused)?.cwd }) /* my: see above */, a.installed ? (i < 9 ? String(i + 1) : "") : "not installed", a.installed)))
         .when(this.agents.length === 0, el => el.child(div().px(9).py(6).text_color(t.dim).child(this.failed ? "Could not load agents" : "Checking installed agents…"))))
       .child(div().h(1).mx(4).my(5).bg(t.border))
       .child(this.row("space", div().w(14).child("+"), "New space", () => run("space.new"), shortcut("space.new")))
