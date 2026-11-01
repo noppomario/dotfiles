@@ -30,6 +30,13 @@ const inside = (dir, root) => dir === root || dir.startsWith(`${root}/`);
 // One line of text: titles and previews may hold newlines and control characters.
 const line = (s) => (s ?? "").replace(/[\u0000-\u001f\u007f]+/g, " ").trim();
 
+/* my: a user message's text, without tags such as <pasted_content id="..."> */
+function promptText(content) {
+  const parts = typeof content === "string" ? [content]
+    : (content ?? []).filter((c) => c?.type === "text").map((c) => c.text);
+  return line(parts.join(" ").replace(/<\/?[A-Za-z_][^>]*>/g, " "));
+}
+
 function ago(iso) {
   const ms = Date.now() - Date.parse(iso);
   const m = Math.floor(ms / 60000);
@@ -61,6 +68,7 @@ export default class Threads extends View {
     this.loading = false;
     this.scope = "space"; // or "all"
     this.roots = {}; // folder -> its repo root (the folder itself outside a repo)
+    this.better = {}; // my: atuin_id -> { key, text }: first real prompt of threads opened with /clear etc.
     cx.spawn(async (cx) => {
       const local = await readTextFile(`${appHome()}/mods/my-atuin-threads/${LOCAL}`);
       if (local) {
@@ -84,6 +92,9 @@ export default class Threads extends View {
         if (r.code !== 0) throw new Error(line(r.stderr).split("Location:")[0] || `atuin exited ${r.code}`);
         // A subagent's thread resumes as its parent's, so only roots are listed.
         this.threads = JSON.parse(r.stdout).map((m) => m.session).filter((s) => !s.parent_atuin_id);
+        /* my: title slash-command threads by their first real prompt; drop those with none */
+        await this.betterTitles();
+        this.threads = this.threads.filter((s) => this.better[s.atuin_id]?.text !== null);
         this.error = null;
       } catch (e) {
         this.error = String(e.message ?? e);
@@ -92,6 +103,25 @@ export default class Threads extends View {
       this.loading = false;
       cx.notify();
     });
+  }
+
+  /* my: threads whose first prompt is a slash command (/clear, /rename) show the first
+     prompt that isn't one; looked up again only when the thread grows */
+  async betterTitles() {
+    for (const s of this.threads) {
+      if (line(s.title) || !line(s.preview).startsWith("/")) continue;
+      const key = `${s.atuin_id}:${s.message_count}`;
+      if (this.better[s.atuin_id]?.key === key) continue;
+      const r = await exec(this.atuin, ["threads", "show", s.atuin_id, "--style", "json"]);
+      if (r.code !== 0) continue;
+      let text = null;
+      for (const m of JSON.parse(r.stdout).messages ?? []) {
+        if (m.role !== "user") continue;
+        const t = promptText(m.content);
+        if (t && !t.startsWith("/")) { text = t; break; }
+      }
+      this.better[s.atuin_id] = { key, text };
+    }
   }
 
   // The repo root of `dir`, looked up once; `dir` itself until known, and outside a repo.
@@ -168,7 +198,7 @@ export default class Threads extends View {
   }
 
   row(t, th) {
-    const title = line(th.title) || line(th.preview) || "(untitled)";
+    const title = line(th.title) || this.better[th.atuin_id]?.text || line(th.preview) || "(untitled)"; /* my */
     const model = th.model ? ` · ${th.model}` : "";
     return v_flex()
       .id(`th-${th.atuin_id}`)
