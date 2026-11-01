@@ -1,0 +1,8 @@
+[Unit]
+Description=Watch Herdr's update notes to check personal mods after an update
+
+[Path]
+PathChanged=%h/.config/herdr-app/update-notes.json
+
+[Install]
+WantedBy=default.target

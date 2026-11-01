@@ -1,0 +1,6 @@
+[Unit]
+Description=Check personal Herdr mods and layouts after a Herdr update
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/herdr-check

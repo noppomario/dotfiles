@@ -1,0 +1,11 @@
+#!/bin/bash
+# Enable herdr-check path unit (re-runs when unit files change)
+# service: {{ include "dot_config/systemd/user/herdr-check.service" | sha256sum }}
+# path: {{ include "dot_config/systemd/user/herdr-check.path" | sha256sum }}
+
+set -e
+
+systemctl --user daemon-reload
+systemctl --user enable --now herdr-check.path
+
+echo "[SUCCESS] herdr-check.path enabled"

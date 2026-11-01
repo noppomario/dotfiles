@@ -1,0 +1,81 @@
+#!/bin/bash
+# Check personal Herdr mods/layouts after a Herdr update and report via a desktop notification.
+#
+#   herdr-check           run only when herdr-app's version differs from the last checked one
+#   herdr-check --force   run regardless of version
+#
+# Checks:
+#   1. `herdr-app status` reports no errors (needs the app running)
+#   2. `herdr-app check` passes for every mod not shipped with Herdr
+#   3. shipped files our clones are based on (see ~/.config/herdr-check/baseline) are unchanged
+# Triggered by herdr-check.path when Herdr rewrites update-notes.json on start.
+
+set -u
+
+APP=$HOME/.local/bin/herdr-app
+HOME_DIR=$HOME/.config/herdr-app
+BASELINE=$HOME/.config/herdr-check/baseline
+STATE=${XDG_STATE_HOME:-$HOME/.local/state}/herdr-check
+LOG=$STATE/last.log
+
+mkdir -p "$STATE"
+version=$("$APP" --version 2>/dev/null | awk '{print $2}')
+[ -n "$version" ] || exit 0
+if [ "${1:-}" != "--force" ] && [ "$(cat "$STATE/version" 2>/dev/null)" = "$version" ]; then
+    exit 0
+fi
+
+problems=()
+exec >"$LOG" 2>&1
+echo "herdr-check $(date '+%F %T') herdr-app $version"
+
+# 1. App status (wait for the window to come up after an update restart).
+status=""
+for _ in $(seq 30); do
+    status=$("$APP" status 2>/dev/null) && break
+    sleep 2
+done
+if [ -z "$status" ]; then
+    echo "== status: herdr-app is not running, skipped"
+else
+    errors=$(jq -c '.errors' <<<"$status")
+    echo "== status errors: $errors"
+    [ "$errors" = "[]" ] || problems+=("status errors")
+fi
+
+# 2. Personal mods (folders not listed in installed.json, which tracks shipped mods).
+shipped=$(jq -r 'keys[]' "$HOME_DIR/installed.json")
+for dir in "$HOME_DIR"/mods/*/; do
+    name=$(basename "$dir")
+    grep -qx "$name" <<<"$shipped" && continue
+    if out=$("$APP" check "$dir" 2>&1); then
+        echo "== check $name: ok"
+    else
+        echo "== check $name: FAILED"
+        echo "$out"
+        problems+=("check $name")
+    fi
+done
+
+# 3. Upstream changes to the shipped files our clones were made from.
+while IFS= read -r -d '' base; do
+    rel=${base#"$BASELINE"/}
+    if diff -u "$base" "$HOME_DIR/$rel" >/tmp/herdr-check-diff.$$; then
+        echo "== shipped $rel: unchanged since $(cat "$BASELINE/VERSION")"
+    else
+        echo "== shipped $rel: CHANGED since $(cat "$BASELINE/VERSION")"
+        cat /tmp/herdr-check-diff.$$
+        problems+=("shipped $rel changed")
+    fi
+done < <(find "$BASELINE" -type f ! -name VERSION -print0)
+rm -f /tmp/herdr-check-diff.$$
+
+echo "$version" >"$STATE/version"
+
+if [ ${#problems[@]} -eq 0 ]; then
+    notify-send -a Herdr "herdr $version: OK" "Personal mods and layouts checked."
+else
+    notify-send -a Herdr -u critical "herdr $version: ${#problems[@]} to review" \
+        "$(printf '%s\n' "${problems[@]}")
+Details: $LOG"
+fi
