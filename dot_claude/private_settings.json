@@ -101,8 +101,7 @@
     "gopls-lsp@claude-plugins-official": true,
     "noppomario-mod@noppo-claudecode-plugins": true,
     "pyright-lsp@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true
+    "rust-analyzer-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "noppo-claudecode-plugins": {
