@@ -138,6 +138,16 @@ Claude Codeの専用ツール（Glob, Grep, Read）で代替可能なBashコマ�
 
 `sudo`コマンドを実行してはならない。root権限が必要な操作はユーザーに実行コマンドを提示し、手動実行を依頼すること。
 
+## 開発環境変更のdotfiles反映
+
+このPCの環境はchezmoi（source: `~/.local/share/chezmoi`、リポジトリ: `noppomario/dotfiles`）とmiseで管理している。
+
+ツールのインストール、`~/.config`等の設定変更、フォント追加、gsettings変更など環境に永続的な変更を加えた場合、作業の区切りで「dotfilesに反映するか」をユーザーに確認すること。
+
+- 承認されたら設定ファイルは `chezmoi add`、インストール手順は `.chezmoiscripts/run_once_*` スクリプトとして追加する
+- アプリが自動生成する状態ファイル（ウィンドウ位置、キャッシュ等）は管理対象にしない
+- commit/pushはユーザーの指示があるまで行わない
+
 ## コーディングスタイル
 
 - 簡潔で読みやすいコードを優先

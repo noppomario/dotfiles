@@ -7,6 +7,7 @@ echo "[INFO] Installing system packages..."
 packages=(
     git
     curl
+    unzip
     vim
     fzf
     ripgrep
