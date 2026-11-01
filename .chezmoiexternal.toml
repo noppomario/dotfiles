@@ -1,0 +1,30 @@
+# Herdr app mods, pinned to upstream commits.
+# Update: bump the commit SHA in url, then `chezmoi apply`.
+
+# https://github.com/thuanlm215/herdr-float-space
+[".config/herdr-app/mods/float-space"]
+type = "archive"
+url = "https://github.com/thuanlm215/herdr-float-space/archive/9cf49835d7a5593d13e10a9c97cb46c83a2bc63e.tar.gz"
+stripComponents = 3
+include = ["*/mods/float-space/**"]
+
+# https://github.com/CacaoRick/herdr-open-vscode
+[".config/herdr-app/mods/open-vscode"]
+type = "archive"
+url = "https://github.com/CacaoRick/herdr-open-vscode/archive/a1a36932823a2d71249f4af162cec4178a840c64.tar.gz"
+stripComponents = 3
+include = ["*/mods/open-vscode/**"]
+
+# https://github.com/atuinsh/herdr-atuin-threads
+[".config/herdr-app/mods/atuin-threads"]
+type = "archive"
+url = "https://github.com/atuinsh/herdr-atuin-threads/archive/6e2786d1ae7555cbe4c338c55c265badc86812cb.tar.gz"
+stripComponents = 3
+include = ["*/mods/atuin-threads/**"]
+
+# https://github.com/dmazlum/herdr-revive
+[".config/herdr-app/mods/revive"]
+type = "archive"
+url = "https://github.com/dmazlum/herdr-revive/archive/6244d70aac005b7b5127b9b26afa056fb43f7f25.tar.gz"
+stripComponents = 3
+include = ["*/mods/revive/**"]

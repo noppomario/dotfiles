@@ -96,6 +96,9 @@ function codeinsiders() {
 alias code='codeinsiders'
 alias update-vscode='sudo dnf update -y code-insiders'
 
+# atuin: takes Ctrl-R from fzf (fzf keeps Ctrl-T / Alt-C). Must come after fzf.
+eval "$(atuin init bash --disable-up-arrow)"
+
 # ----- Shell enhancements (must be at the end) -----
 eval "$(zoxide init bash --cmd cd)"
 

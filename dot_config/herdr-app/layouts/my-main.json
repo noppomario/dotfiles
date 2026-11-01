@@ -79,7 +79,7 @@
           "id": "tabs",
           "type": "block",
           "content": {
-            "mod": "tabs"
+            "mod": "my-tabs"
           },
           "size": {
             "px": 42
@@ -157,14 +157,34 @@
           "gap": 8
         },
         {
-          "id": "status",
-          "type": "block",
-          "content": {
-            "mod": "workspace-status"
-          },
+          "id": "status-row",
+          "type": "row",
           "size": {
             "px": 28
-          }
+          },
+          "resizable": false,
+          "children": [
+            {
+              "id": "status",
+              "type": "block",
+              "content": {
+                "mod": "workspace-status"
+              }
+            },
+            {
+              "id": "float-space-launcher",
+              "type": "block",
+              "size": {
+                "px": 32
+              },
+              "content": {
+                "mod": "float-space",
+                "props": {
+                  "role": "launcher"
+                }
+              }
+            }
+          ]
         }
       ],
       "resizable": false
