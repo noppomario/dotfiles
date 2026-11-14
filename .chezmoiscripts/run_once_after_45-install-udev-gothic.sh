@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install UDEV Gothic (Japanese monospace font, used by herdr) from GitHub releases
+# Install UDEV Gothic (Japanese monospace font) from GitHub releases
 
 set -e
 

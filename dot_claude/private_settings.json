@@ -74,28 +74,6 @@
     ]
   },
   "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/.config/herdr-app/mods/revive/revive.mjs hook",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/.config/herdr-app/mods/revive/revive.mjs hook",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
     "Notification": [
       {
         "matcher": "permission_prompt",
@@ -135,7 +113,6 @@
   },
   "outputStyle": "Concise",
   "tui": "fullscreen",
-  "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
   "cleanupPeriodDays": 9999,
   "statusLine": {
