@@ -60,9 +60,6 @@
       "Bash(systemctl --user status:*)",
       "Bash(systemctl status:*)",
 
-      "Skill(markdown-fix)",
-      "Skill(markdown-fix:*)",
-
       "Read(~/.cargo/registry/src/**)",
       "Read(~/.config/autostart/**)",
       "Read(~/.local/share/chezmoi/**)",

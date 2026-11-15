@@ -41,32 +41,6 @@ AI生成のドキュメントは冗長で情報密度が低くなりやすい。
 - 更新コストを意識する: 詳細に書くほど保守負債になる
 - 既存ドキュメントの更新は最小限の差分で行う: 全体の書き直しではなく、該当箇所のみ修正する
 
-## Markdown記述ルール
-
-Claude Codeが生成する全てのmarkdown（プランファイル、ドキュメント等）は、**markdownlintの全ルール**に準拠すること。
-
-### 遵守すべきルール
-
-全てのmarkdownlintルール（MD001-MD050等）に従うこと。
-
-主要なルール（例）:
-
-- **MD001**: 見出しレベルは段階的に増加
-- **MD013**: 無効（エディタで折り返されるため）
-- **MD022**: 見出しの前後に空行
-- **MD029**: 順序付きリストは1,2,3...形式
-- **MD032**: リストの前後に空行
-- **MD036**: 強調を見出しの代わりに使わない
-- **MD040**: コードブロックに言語指定必須
-
-### 確認方法
-
-markdownファイル作成・編集後は `markdown-fix` スキルで検証・修正すること。
-
-### 参考リンク
-
-- [markdownlint全ルール一覧](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md)
-
 ## MCPツール
 
 以下が必要な場合は自動的にcontext7を使用すること:
@@ -115,7 +89,7 @@ PRのコメントを確認する際は `gh pr view <number> --comments` を使�
 
 1. Web（WebFetch, WebSearch）
 2. MCP
-3. Bash — ビルド/開発ツール（bun, cargo, markdownlint等）
+3. Bash — ビルド/開発ツール（bun, cargo等）
 4. Bash — ファイル操作（ls, mkdir, tree等）
 5. Bash — Git
 6. Bash — GitHub CLI
